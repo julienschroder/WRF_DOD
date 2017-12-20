@@ -3,17 +3,13 @@ import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objs as go
 import pandas as pd
+import urllib.request, json
 
 server = flask.Flask(__name__)
 server.secret_key = os.environ.get('secret_key', 'secret')
 app = dash.Dash(name = __name__, server = server)
 app.config.supress_callback_exceptions = True
 
-
-csv = 'https://www.snap.uaf.edu/webshared/jschroder/WRF_extract_GFDL_1970-2100_FAI.csv'
-out_fn = '/workspace/Shared/Users/jschroder/TMP/WRF_extract_GFDL_1970-2100_FAI.csv'
-df = pd.read_csv(csv,index_col = 0)
-df.index = pd.to_datetime(df.index)
 temp = ('C1 : 0 to -25','C2 : -25.1 to -50','C3 : colder than -50')
 values = (0 , -25 , -40 )
 
@@ -65,9 +61,10 @@ app.layout = html.Div([
      dash.dependencies.Input('temperature', 'value')])
 def update_graph(nb_days,temperature):
 
-    x = df[df.rolling(int(nb_days))['max'].max() <= temperature]
-    dff = x.groupby(x.index.year)['max'].count().to_frame('occurences')
-
+    api_url = "http://localhost:3000/thresholds/temp?days_window={days}&max_temperature={temp}"
+    # TODO: would need error handling
+    with urllib.request.urlopen(api_url.format(days=nb_days, temp=temperature)) as url:
+        dff = df.from_dict(json.loads(url.read().decode()))
 
     return {
         'data': [go.Bar(

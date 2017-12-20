@@ -1,2 +1,2 @@
-Draft hosted on Heroku
+Compare to another Draft hosted on Heroku
 https://stark-beyond-94184.herokuapp.com/
