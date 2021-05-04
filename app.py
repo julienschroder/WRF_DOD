@@ -27,7 +27,7 @@ app.layout = html.Div([
                 className='eight columns',
             ),
             html.Img(
-                src="https://www.snap.uaf.edu/sites/all/themes/snap_bootstrap/logo.png",
+                src="https://uaf-snap.org/wp-content/uploads/2020/06/SNAP_color_all.svg",
                 className='one columns',
                 style={
                     'height': '80',
